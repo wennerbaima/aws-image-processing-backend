@@ -16,10 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          python-version: 3.13
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       ####################################
       # generate-upload-url
@@ -31,22 +33,10 @@ jobs:
           zip -r generate-upload-url.zip .
 
       - name: Deploy generate-upload-url
-        uses: appleboy/lambda-action@v0.2.0
-        with:
-          aws_access_key_id:
-            ${{ secrets.AWS_ACCESS_KEY_ID }}
-
-          aws_secret_access_key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-          aws_region:
-            us-east-1
-
-          function_name:
-            generate-upload-url
-
-          zip_file:
-            generate-upload-url/generate-upload-url.zip
+        run: |
+          aws lambda update-function-code \
+            --function-name generate-upload-url \
+            --zip-file fileb://lambdas/generate-upload-url/generate-upload-url.zip
 
       ####################################
       # image-processor
@@ -58,19 +48,7 @@ jobs:
           zip -r image-processor.zip .
 
       - name: Deploy image-processor
-        uses: appleboy/lambda-action@v0.2.0
-        with:
-          aws_access_key_id:
-            ${{ secrets.AWS_ACCESS_KEY_ID }}
-
-          aws_secret_access_key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-          aws_region:
-            us-east-1
-
-          function_name:
-            image-processor
-
-          zip_file:
-            image-processor/image-processor.zip
+        run: |
+          aws lambda update-function-code \
+            --function-name image-processor \
+            --zip-file fileb://lambdas/image-processor/image-processor.zip
