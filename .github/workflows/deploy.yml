@@ -1,0 +1,76 @@
+name: Deploy Backend Lambdas
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      ####################################
+      # generate-upload-url
+      ####################################
+
+      - name: Package generate-upload-url
+        run: |
+          cd lambdas/generate-upload-url
+          zip -r generate-upload-url.zip .
+
+      - name: Deploy generate-upload-url
+        uses: appleboy/lambda-action@v0.2.0
+        with:
+          aws_access_key_id:
+            ${{ secrets.AWS_ACCESS_KEY_ID }}
+
+          aws_secret_access_key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          aws_region:
+            us-east-1
+
+          function_name:
+            generate-upload-url
+
+          zip_file:
+            generate-upload-url/generate-upload-url.zip
+
+      ####################################
+      # image-processor
+      ####################################
+
+      - name: Package image-processor
+        run: |
+          cd lambdas/image-processor
+          zip -r image-processor.zip .
+
+      - name: Deploy image-processor
+        uses: appleboy/lambda-action@v0.2.0
+        with:
+          aws_access_key_id:
+            ${{ secrets.AWS_ACCESS_KEY_ID }}
+
+          aws_secret_access_key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          aws_region:
+            us-east-1
+
+          function_name:
+            image-processor
+
+          zip_file:
+            image-processor/image-processor.zip
