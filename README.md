@@ -13,7 +13,7 @@ O projeto demonstra integração entre múltiplos serviços AWS utilizando boas 
 
 # 🚀 Arquitetura
 
-![Architecture](architecture/aws-architecture.png)
+![Architecture](architecture/architecture.png)
 
 ---
 
@@ -102,6 +102,7 @@ A função:
 ```text
 image-processor
 ```
+realiza:
 - resize
 - compressão
 - geração de nova versão da imagem
@@ -190,7 +191,7 @@ Workflow:
 aws-image-processing-backend/
 │
 ├── architecture/
-│   └── aws-architecture.png
+│   └── architecture.png
 │
 ├── screenshots/
 │   ├── lambda-generate-upload-url.png
